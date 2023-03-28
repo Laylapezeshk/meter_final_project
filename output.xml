@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.0.2 (Python 3.8.7 on darwin)" generated="20230328 12:13:11.038" rpa="false" schemaversion="3">
+<suite id="s1" name="ControllerInterfaces" source="/Users/lpezeshkmehr/Documents/Meter_robot_project/qa-engineer-takehome-challenge/Tests/ControllerInterfaces.robot">
+<test id="s1-t1" name="Check DHCP Range Valid For Interface IP Addresses" line="20">
+<kw name="Create Session" library="RequestsLibrary">
+<arg>API_Testing</arg>
+<arg>${Base_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20230328 12:13:11.193" level="INFO">Creating Session using : alias=API_Testing, url=https://moc-noc-api.deta.dev, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<status status="PASS" starttime="20230328 12:13:11.192" endtime="20230328 12:13:11.193"/>
+</kw>
+<kw name="GET" library="RequestsLibrary">
+<var>${response}</var>
+<arg>${Base_URL}</arg>
+<doc>Sends a GET request.</doc>
+<msg timestamp="20230328 12:13:11.519" level="INFO">GET Request : url=https://moc-noc-api.deta.dev/ 
+ path_url=/ 
+ headers={'User-Agent': 'python-requests/2.28.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'} 
+ body=None 
+ </msg>
+<msg timestamp="20230328 12:13:11.519" level="INFO">GET Response : url=https://moc-noc-api.deta.dev/ 
+ status=200, reason=OK 
+ headers={'Date': 'Tue, 28 Mar 2023 19:13:11 GMT', 'Content-Type': 'application/json', 'Content-Length': '364', 'Connection': 'keep-alive', 'Server': 'Deta'} 
+ body={"moc-noc.v1.meta":{"controller":"mcx06","realm":"qa"},"moc-noc.v1.network.corp":{"dhcp":{"gateway":"10.100.0.1","ip-range":"10.100.0.10-10.102.255.250","netmask":"255.255.255.0"},"ip-address":"10.100.0.1/24"},"moc-noc.v1.network.guest":{"dhcp":{"gateway":"172.16.0.1","ip-range":"172.16.0.10-172.16.0.250","netmask":"255.255.255.0"},"ip-address":"172.16.0.1/24"}} 
+ </msg>
+<msg timestamp="20230328 12:13:11.520" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<status status="PASS" starttime="20230328 12:13:11.193" endtime="20230328 12:13:11.520"/>
+</kw>
+<kw name="Convert To String" library="BuiltIn">
+<var>${status_code}</var>
+<arg>${response.status_code}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<msg timestamp="20230328 12:13:11.522" level="INFO">${status_code} = 200</msg>
+<status status="PASS" starttime="20230328 12:13:11.521" endtime="20230328 12:13:11.523"/>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<arg>${status_code}</arg>
+<arg>200</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" starttime="20230328 12:13:11.523" endtime="20230328 12:13:11.524"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${body}</var>
+<arg>${response.content}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:11.525" level="INFO">${body} = {"moc-noc.v1.meta":{"controller":"mcx06","realm":"qa"},"moc-noc.v1.network.corp":{"dhcp":{"gateway":"10.100.0.1","ip-range":"10.100.0.10-10.102.255.250","netmask":"255.255.255.0"},"ip-address":"10.100...</msg>
+<status status="PASS" starttime="20230328 12:13:11.524" endtime="20230328 12:13:11.525"/>
+</kw>
+<kw name="Convert To String" library="BuiltIn">
+<var>${body_json}</var>
+<arg>${body}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<msg timestamp="20230328 12:13:11.526" level="INFO">${body_json} = {"moc-noc.v1.meta":{"controller":"mcx06","realm":"qa"},"moc-noc.v1.network.corp":{"dhcp":{"gateway":"10.100.0.1","ip-range":"10.100.0.10-10.102.255.250","netmask":"255.255.255.0"},"ip-address":"10.100...</msg>
+<status status="PASS" starttime="20230328 12:13:11.526" endtime="20230328 12:13:11.527"/>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<var>${body_dict}</var>
+<arg>json.loads("""${body_json}""")</arg>
+<arg>modules=json</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<msg timestamp="20230328 12:13:11.528" level="INFO">${body_dict} = {'moc-noc.v1.meta': {'controller': 'mcx06', 'realm': 'qa'}, 'moc-noc.v1.network.corp': {'dhcp': {'gateway': '10.100.0.1', 'ip-range': '10.100.0.10-10.102.255.250', 'netmask': '255.255.255.0'}, 'ip-add...</msg>
+<status status="PASS" starttime="20230328 12:13:11.527" endtime="20230328 12:13:11.528"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${interface_ip_address_guest}</var>
+<arg>${body_dict['moc-noc.v1.network.guest']['dhcp']['gateway']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:11.529" level="INFO">${interface_ip_address_guest} = 172.16.0.1</msg>
+<status status="PASS" starttime="20230328 12:13:11.528" endtime="20230328 12:13:11.529"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${interface_ip_address_guest}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:11.530" endtime="20230328 12:13:11.530"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${dhcp_guest_ip_range}</var>
+<arg>${body_dict['moc-noc.v1.network.guest']['dhcp']['ip-range']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:11.531" level="INFO">${dhcp_guest_ip_range} = 172.16.0.10-172.16.0.250</msg>
+<status status="PASS" starttime="20230328 12:13:11.530" endtime="20230328 12:13:11.531"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${dhcp_guest_ip_range}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:11.531" endtime="20230328 12:13:11.532"/>
+</kw>
+<kw name="Split String" library="String">
+<var>${first_octet}</var>
+<var>${second_octet}</var>
+<var>${third_octet}</var>
+<var>${forth_octet}</var>
+<arg>${interface_ip_address_guest}</arg>
+<arg>.</arg>
+<doc>Splits the ``string`` using ``separator`` as a delimiter string.</doc>
+<msg timestamp="20230328 12:13:11.533" level="INFO">${first_octet} = 172</msg>
+<msg timestamp="20230328 12:13:11.533" level="INFO">${second_octet} = 16</msg>
+<msg timestamp="20230328 12:13:11.533" level="INFO">${third_octet} = 0</msg>
+<msg timestamp="20230328 12:13:11.533" level="INFO">${forth_octet} = 1</msg>
+<status status="PASS" starttime="20230328 12:13:11.532" endtime="20230328 12:13:11.533"/>
+</kw>
+<kw name="Split String" library="String">
+<var>${dhcp_start_ip_guest}</var>
+<var>${dhcp_end_ip_guest}</var>
+<arg>${dhcp_guest_ip_range}</arg>
+<arg>-</arg>
+<doc>Splits the ``string`` using ``separator`` as a delimiter string.</doc>
+<msg timestamp="20230328 12:13:11.534" level="INFO">${dhcp_start_ip_guest} = 172.16.0.10</msg>
+<msg timestamp="20230328 12:13:11.534" level="INFO">${dhcp_end_ip_guest} = 172.16.0.250</msg>
+<status status="PASS" starttime="20230328 12:13:11.533" endtime="20230328 12:13:11.534"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${first_octet}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:11.534" endtime="20230328 12:13:11.534"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${dhcp_start_ip_guest}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:11.535" endtime="20230328 12:13:11.535"/>
+</kw>
+<kw name="Split String" library="String">
+<var>${first_end_dhcp}</var>
+<var>${second_end_dhcp}</var>
+<var>${third_end_dhcp}</var>
+<var>${forth_end_dhcp}</var>
+<arg>${dhcp_end_ip_guest}</arg>
+<arg>.</arg>
+<doc>Splits the ``string`` using ``separator`` as a delimiter string.</doc>
+<msg timestamp="20230328 12:13:11.536" level="INFO">${first_end_dhcp} = 172</msg>
+<msg timestamp="20230328 12:13:11.536" level="INFO">${second_end_dhcp} = 16</msg>
+<msg timestamp="20230328 12:13:11.536" level="INFO">${third_end_dhcp} = 0</msg>
+<msg timestamp="20230328 12:13:11.536" level="INFO">${forth_end_dhcp} = 250</msg>
+<status status="PASS" starttime="20230328 12:13:11.535" endtime="20230328 12:13:11.536"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${first_end_dhcp}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:11.536" endtime="20230328 12:13:11.537"/>
+</kw>
+<kw name="Split String" library="String">
+<var>${first_start_dhcp}</var>
+<var>${second_start_dhcp}</var>
+<var>${third_start_dhcp}</var>
+<var>${forth_start_dhcp}</var>
+<arg>${dhcp_start_ip_guest}</arg>
+<arg>.</arg>
+<doc>Splits the ``string`` using ``separator`` as a delimiter string.</doc>
+<msg timestamp="20230328 12:13:11.537" level="INFO">${first_start_dhcp} = 172</msg>
+<msg timestamp="20230328 12:13:11.538" level="INFO">${second_start_dhcp} = 16</msg>
+<msg timestamp="20230328 12:13:11.538" level="INFO">${third_start_dhcp} = 0</msg>
+<msg timestamp="20230328 12:13:11.538" level="INFO">${forth_start_dhcp} = 10</msg>
+<status status="PASS" starttime="20230328 12:13:11.537" endtime="20230328 12:13:11.538"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${first_start_dhcp}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:11.538" endtime="20230328 12:13:11.538"/>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<var>${valid_range}</var>
+<arg>int(${forth_start_dhcp}) &lt;= int(${forth_octet}) &lt;= int(${forth_end_dhcp})</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<msg timestamp="20230328 12:13:11.539" level="INFO">${valid_range} = False</msg>
+<status status="PASS" starttime="20230328 12:13:11.539" endtime="20230328 12:13:11.539"/>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<arg>${valid_range}</arg>
+<arg>Log</arg>
+<arg>DHCP range is valid for interface IP address</arg>
+<arg>ELSE</arg>
+<arg>Log</arg>
+<arg>DHCP range is NOT valid for interface IP address</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<kw name="Log" library="BuiltIn">
+<arg>DHCP range is NOT valid for interface IP address</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230328 12:13:11.540" level="INFO">DHCP range is NOT valid for interface IP address</msg>
+<status status="PASS" starttime="20230328 12:13:11.540" endtime="20230328 12:13:11.540"/>
+</kw>
+<status status="PASS" starttime="20230328 12:13:11.540" endtime="20230328 12:13:11.540"/>
+</kw>
+<doc>Check DHCP Range is valid.</doc>
+<status status="PASS" starttime="20230328 12:13:11.192" endtime="20230328 12:13:11.541"/>
+</test>
+<test id="s1-t2" name="Check IP Addresses are Private" line="74">
+<kw name="Create Session" library="RequestsLibrary">
+<arg>API_Testing</arg>
+<arg>${Base_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20230328 12:13:11.542" level="INFO">Creating Session using : alias=API_Testing, url=https://moc-noc-api.deta.dev, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<status status="PASS" starttime="20230328 12:13:11.542" endtime="20230328 12:13:11.542"/>
+</kw>
+<kw name="GET" library="RequestsLibrary">
+<var>${response}</var>
+<arg>${Base_URL}</arg>
+<doc>Sends a GET request.</doc>
+<msg timestamp="20230328 12:13:11.844" level="INFO">GET Request : url=https://moc-noc-api.deta.dev/ 
+ path_url=/ 
+ headers={'User-Agent': 'python-requests/2.28.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'} 
+ body=None 
+ </msg>
+<msg timestamp="20230328 12:13:11.844" level="INFO">GET Response : url=https://moc-noc-api.deta.dev/ 
+ status=200, reason=OK 
+ headers={'Date': 'Tue, 28 Mar 2023 19:13:11 GMT', 'Content-Type': 'application/json', 'Content-Length': '364', 'Connection': 'keep-alive', 'Server': 'Deta'} 
+ body={"moc-noc.v1.meta":{"controller":"mcx06","realm":"qa"},"moc-noc.v1.network.corp":{"dhcp":{"gateway":"10.100.0.1","ip-range":"10.100.0.10-10.102.255.250","netmask":"255.255.255.0"},"ip-address":"10.100.0.1/24"},"moc-noc.v1.network.guest":{"dhcp":{"gateway":"172.16.0.1","ip-range":"172.16.0.10-172.16.0.250","netmask":"255.255.255.0"},"ip-address":"172.16.0.1/24"}} 
+ </msg>
+<msg timestamp="20230328 12:13:11.844" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<status status="PASS" starttime="20230328 12:13:11.542" endtime="20230328 12:13:11.844"/>
+</kw>
+<kw name="Convert To String" library="BuiltIn">
+<var>${status_code}</var>
+<arg>${response.status_code}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<msg timestamp="20230328 12:13:11.846" level="INFO">${status_code} = 200</msg>
+<status status="PASS" starttime="20230328 12:13:11.845" endtime="20230328 12:13:11.846"/>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<arg>${status_code}</arg>
+<arg>200</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" starttime="20230328 12:13:11.847" endtime="20230328 12:13:11.847"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${response.content}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:11.848" endtime="20230328 12:13:11.849"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${body}</var>
+<arg>${response.content}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:11.851" level="INFO">${body} = {"moc-noc.v1.meta":{"controller":"mcx06","realm":"qa"},"moc-noc.v1.network.corp":{"dhcp":{"gateway":"10.100.0.1","ip-range":"10.100.0.10-10.102.255.250","netmask":"255.255.255.0"},"ip-address":"10.100...</msg>
+<status status="PASS" starttime="20230328 12:13:11.849" endtime="20230328 12:13:11.851"/>
+</kw>
+<kw name="Convert To String" library="BuiltIn">
+<var>${body_json}</var>
+<arg>${body}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<msg timestamp="20230328 12:13:11.852" level="INFO">${body_json} = {"moc-noc.v1.meta":{"controller":"mcx06","realm":"qa"},"moc-noc.v1.network.corp":{"dhcp":{"gateway":"10.100.0.1","ip-range":"10.100.0.10-10.102.255.250","netmask":"255.255.255.0"},"ip-address":"10.100...</msg>
+<status status="PASS" starttime="20230328 12:13:11.851" endtime="20230328 12:13:11.852"/>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<var>${body_dict}</var>
+<arg>json.loads("""${body_json}""")</arg>
+<arg>modules=json</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<msg timestamp="20230328 12:13:11.853" level="INFO">${body_dict} = {'moc-noc.v1.meta': {'controller': 'mcx06', 'realm': 'qa'}, 'moc-noc.v1.network.corp': {'dhcp': {'gateway': '10.100.0.1', 'ip-range': '10.100.0.10-10.102.255.250', 'netmask': '255.255.255.0'}, 'ip-add...</msg>
+<status status="PASS" starttime="20230328 12:13:11.852" endtime="20230328 12:13:11.853"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${interface_ip_address_guest}</var>
+<arg>${body_dict['moc-noc.v1.network.guest']['dhcp']['gateway']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:11.855" level="INFO">${interface_ip_address_guest} = 172.16.0.1</msg>
+<status status="PASS" starttime="20230328 12:13:11.853" endtime="20230328 12:13:11.855"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${interface_ip_address_corp}</var>
+<arg>${body_dict['moc-noc.v1.network.corp']['dhcp']['gateway']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:11.856" level="INFO">${interface_ip_address_corp} = 10.100.0.1</msg>
+<status status="PASS" starttime="20230328 12:13:11.855" endtime="20230328 12:13:11.856"/>
+</kw>
+<kw name="Run And Return Rc And Output" library="OperatingSystem">
+<var>${ip_address_guest}</var>
+<arg>ipcalc -p ${interface_ip_address_guest}</arg>
+<doc>Runs the given command in the system and returns the RC and output.</doc>
+<msg timestamp="20230328 12:13:11.866" level="INFO">Running command 'ipcalc -p 172.16.0.1 2&gt;&amp;1'.</msg>
+<msg timestamp="20230328 12:13:11.875" level="INFO">${ip_address_guest} = (127, '/bin/sh: ipcalc: command not found')</msg>
+<status status="PASS" starttime="20230328 12:13:11.857" endtime="20230328 12:13:11.876"/>
+</kw>
+<kw name="Run And Return Rc And Output" library="OperatingSystem">
+<var>${ip_address_corp}</var>
+<arg>ipcalc -p ${interface_ip_address_corp}</arg>
+<doc>Runs the given command in the system and returns the RC and output.</doc>
+<msg timestamp="20230328 12:13:11.881" level="INFO">Running command 'ipcalc -p 10.100.0.1 2&gt;&amp;1'.</msg>
+<msg timestamp="20230328 12:13:11.888" level="INFO">${ip_address_corp} = (127, '/bin/sh: ipcalc: command not found')</msg>
+<status status="PASS" starttime="20230328 12:13:11.876" endtime="20230328 12:13:11.888"/>
+</kw>
+<kw name="Should Not Be Equal As Strings" library="BuiltIn">
+<arg>${ip_address_guest[1]}</arg>
+<arg>0</arg>
+<doc>Fails if objects are equal after converting them to strings.</doc>
+<status status="PASS" starttime="20230328 12:13:11.889" endtime="20230328 12:13:11.890"/>
+</kw>
+<kw name="Should Not Be Equal As Strings" library="BuiltIn">
+<arg>${ip_address_corp[1]}</arg>
+<arg>0</arg>
+<doc>Fails if objects are equal after converting them to strings.</doc>
+<status status="PASS" starttime="20230328 12:13:11.890" endtime="20230328 12:13:11.891"/>
+</kw>
+<doc>Check IP Addresses are Private.</doc>
+<status status="PASS" starttime="20230328 12:13:11.541" endtime="20230328 12:13:11.891"/>
+</test>
+<test id="s1-t3" name="DHCP server netmask matches the VLSM subnet" line="100">
+<kw name="Create Session" library="RequestsLibrary">
+<arg>API_Testing</arg>
+<arg>${Base_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20230328 12:13:11.892" level="INFO">Creating Session using : alias=API_Testing, url=https://moc-noc-api.deta.dev, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<status status="PASS" starttime="20230328 12:13:11.892" endtime="20230328 12:13:11.892"/>
+</kw>
+<kw name="GET" library="RequestsLibrary">
+<var>${response}</var>
+<arg>${Base_URL}</arg>
+<doc>Sends a GET request.</doc>
+<msg timestamp="20230328 12:13:12.194" level="INFO">GET Request : url=https://moc-noc-api.deta.dev/ 
+ path_url=/ 
+ headers={'User-Agent': 'python-requests/2.28.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'} 
+ body=None 
+ </msg>
+<msg timestamp="20230328 12:13:12.194" level="INFO">GET Response : url=https://moc-noc-api.deta.dev/ 
+ status=200, reason=OK 
+ headers={'Date': 'Tue, 28 Mar 2023 19:13:12 GMT', 'Content-Type': 'application/json', 'Content-Length': '364', 'Connection': 'keep-alive', 'Server': 'Deta'} 
+ body={"moc-noc.v1.meta":{"controller":"mcx06","realm":"qa"},"moc-noc.v1.network.corp":{"dhcp":{"gateway":"10.100.0.1","ip-range":"10.100.0.10-10.102.255.250","netmask":"255.255.255.0"},"ip-address":"10.100.0.1/24"},"moc-noc.v1.network.guest":{"dhcp":{"gateway":"172.16.0.1","ip-range":"172.16.0.10-172.16.0.250","netmask":"255.255.255.0"},"ip-address":"172.16.0.1/24"}} 
+ </msg>
+<msg timestamp="20230328 12:13:12.194" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<status status="PASS" starttime="20230328 12:13:11.893" endtime="20230328 12:13:12.194"/>
+</kw>
+<kw name="Convert To String" library="BuiltIn">
+<var>${status_code}</var>
+<arg>${response.status_code}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<msg timestamp="20230328 12:13:12.196" level="INFO">${status_code} = 200</msg>
+<status status="PASS" starttime="20230328 12:13:12.194" endtime="20230328 12:13:12.196"/>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<arg>${status_code}</arg>
+<arg>200</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" starttime="20230328 12:13:12.196" endtime="20230328 12:13:12.196"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${response.content}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:12.196" endtime="20230328 12:13:12.197"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${body}</var>
+<arg>${response.content}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:12.198" level="INFO">${body} = {"moc-noc.v1.meta":{"controller":"mcx06","realm":"qa"},"moc-noc.v1.network.corp":{"dhcp":{"gateway":"10.100.0.1","ip-range":"10.100.0.10-10.102.255.250","netmask":"255.255.255.0"},"ip-address":"10.100...</msg>
+<status status="PASS" starttime="20230328 12:13:12.198" endtime="20230328 12:13:12.198"/>
+</kw>
+<kw name="Convert To String" library="BuiltIn">
+<var>${body_json}</var>
+<arg>${body}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<msg timestamp="20230328 12:13:12.199" level="INFO">${body_json} = {"moc-noc.v1.meta":{"controller":"mcx06","realm":"qa"},"moc-noc.v1.network.corp":{"dhcp":{"gateway":"10.100.0.1","ip-range":"10.100.0.10-10.102.255.250","netmask":"255.255.255.0"},"ip-address":"10.100...</msg>
+<status status="PASS" starttime="20230328 12:13:12.199" endtime="20230328 12:13:12.199"/>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<var>${body_dict}</var>
+<arg>json.loads("""${body_json}""")</arg>
+<arg>modules=json</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<msg timestamp="20230328 12:13:12.200" level="INFO">${body_dict} = {'moc-noc.v1.meta': {'controller': 'mcx06', 'realm': 'qa'}, 'moc-noc.v1.network.corp': {'dhcp': {'gateway': '10.100.0.1', 'ip-range': '10.100.0.10-10.102.255.250', 'netmask': '255.255.255.0'}, 'ip-add...</msg>
+<status status="PASS" starttime="20230328 12:13:12.199" endtime="20230328 12:13:12.200"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${dhcp_netmask_corp}</var>
+<arg>${body_dict['moc-noc.v1.network.corp']['dhcp']['netmask']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:12.201" level="INFO">${dhcp_netmask_corp} = 255.255.255.0</msg>
+<status status="PASS" starttime="20230328 12:13:12.200" endtime="20230328 12:13:12.201"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${dhcp_netmask_corp}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:12.201" endtime="20230328 12:13:12.201"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${vlsm_subnet_corp}</var>
+<arg>${body_dict['moc-noc.v1.network.corp']['ip-address']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:12.202" level="INFO">${vlsm_subnet_corp} = 10.100.0.1/24</msg>
+<status status="PASS" starttime="20230328 12:13:12.202" endtime="20230328 12:13:12.202"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${vlsm_subnet_corp}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:12.203" endtime="20230328 12:13:12.203"/>
+</kw>
+<kw name="Split String" library="String">
+<var>${sub}</var>
+<arg>${vlsm_subnet_corp}</arg>
+<arg>/</arg>
+<doc>Splits the ``string`` using ``separator`` as a delimiter string.</doc>
+<msg timestamp="20230328 12:13:12.204" level="INFO">${sub} = ['10.100.0.1', '24']</msg>
+<status status="PASS" starttime="20230328 12:13:12.203" endtime="20230328 12:13:12.204"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${vlsm_sub}</var>
+<arg>${sub[1]}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:12.204" level="INFO">${vlsm_sub} = 24</msg>
+<status status="PASS" starttime="20230328 12:13:12.204" endtime="20230328 12:13:12.204"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${vlsm_sub}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:12.205" endtime="20230328 12:13:12.205"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${subnet_mask}</var>
+<arg>${vlsm_sub}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20230328 12:13:12.205" level="INFO">${subnet_mask} = 24</msg>
+<status status="PASS" starttime="20230328 12:13:12.205" endtime="20230328 12:13:12.205"/>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<var>${dotted_decimal}</var>
+<arg>'.'.join([str((0xffffffff &lt;&lt; (32 - int(${subnet_mask}))) &gt;&gt; i &amp; 0xff) for i in range(24, -8, -8)])</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<msg timestamp="20230328 12:13:12.206" level="INFO">${dotted_decimal} = 255.255.255.0</msg>
+<status status="PASS" starttime="20230328 12:13:12.205" endtime="20230328 12:13:12.206"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${dotted_decimal}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:12.206" endtime="20230328 12:13:12.207"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>${dhcp_netmask_corp}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" starttime="20230328 12:13:12.207" endtime="20230328 12:13:12.207"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${dotted_decimal}</arg>
+<arg>${dhcp_netmask_corp}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" starttime="20230328 12:13:12.207" endtime="20230328 12:13:12.208"/>
+</kw>
+<doc>Compare DHCP server netmask with VLSM subnet .</doc>
+<status status="PASS" starttime="20230328 12:13:11.891" endtime="20230328 12:13:12.208"/>
+</test>
+<doc>Welcome to Meter's QA Engineer Take-Home Challenge!
+Example keywords for Python's "ipaddress" module are
+included to get you started. Feel free to modify these
+starter files as needed!</doc>
+<status status="PASS" starttime="20230328 12:13:11.039" endtime="20230328 12:13:12.209"/>
+</suite>
+<statistics>
+<total>
+<stat pass="3" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="3" fail="0" skip="0" id="s1" name="ControllerInterfaces">ControllerInterfaces</stat>
+</suite>
+</statistics>
+<errors>
+<msg timestamp="20230328 12:13:11.191" level="ERROR">Error in file '/Users/lpezeshkmehr/Documents/Meter_robot_project/qa-engineer-takehome-challenge/Tests/ControllerInterfaces.robot' on line 11: Importing library 'Ipaddress' failed: ModuleNotFoundError: No module named 'Ipaddress'
+Traceback (most recent call last):
+  None
+PYTHONPATH:
+  /Users/lpezeshkmehr/Documents/Meter_robot_project/qa-engineer-takehome-challenge/Tests
+  /Library/Frameworks/Python.framework/Versions/3.8/lib/python38.zip
+  /Library/Frameworks/Python.framework/Versions/3.8/lib/python3.8
+  /Library/Frameworks/Python.framework/Versions/3.8/lib/python3.8/lib-dynload
+  /Users/lpezeshkmehr/Library/Python/3.8/lib/python/site-packages
+  /Library/Frameworks/Python.framework/Versions/3.8/lib/python3.8/site-packages</msg>
+</errors>
+</robot>
